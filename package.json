@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/aeunderhill/tinyapp/issues"
   },
-  "homepage": "https://github.com/aeunderhill/tinyapp#readme"
+  "homepage": "https://github.com/aeunderhill/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
