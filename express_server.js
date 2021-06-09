@@ -25,6 +25,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = { 
+  "randomID": {
+    id: "dad", 
+    email: "dad@home.com", 
+    password: "abc"
+  },
+  "randomID": {
+    id: "mom", 
+    email: "mom@home.com", 
+    password: "123"
+  }
+}
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
@@ -41,7 +54,7 @@ app.get("/urls.json", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase,
-    username: req.cookies["username"] };
+    user: users[req.cookies["User_ID"]] }; //could be the problem
     console.log(templateVars)
   res.render("urls_index", templateVars);
 });
@@ -52,7 +65,7 @@ app.get("/urls/:shortURL", (req, res) => {
 const shortURL = req.params.shortURL
 const templateVars = { shortURL,
    longURL: urlDatabase[shortURL],
-   username: req.cookies["username"] };
+   user: users[req.cookies["user_ID"]] };  //could be the problem
   res.render("urls_show", templateVars);
 });
 
@@ -76,11 +89,29 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  res.cookie('username', req.body.username)
+  res.cookie('user_ID') //another possible problem
   res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('username')
+  res.clearCookie('user_ID') //another possible problem
   res.redirect("/urls");
+});
+
+app.get("/register", (req, res) => {
+  const templateVars = { 
+    user: users[req.cookies["user_ID"]] 
+  };
+    res.render("register", templateVars);;
+});
+
+app.post("/register", (req, res) => {
+  let randomID  = generaterandomString();
+  users[randomID] = {
+    id: randomID,
+    email: req.body.email,
+    password: req.body.password
+  };
+  res.cookie('user_ID', randomID);
+  res.redirect("/urls");        
 });
