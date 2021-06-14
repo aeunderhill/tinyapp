@@ -53,10 +53,6 @@ const PORT = 8080; // default port 8080
     return userURLs;
   }
   
-  function checkPassword(user, password) {
-    let hashPassword = bcrypt.hashSync(password, 10)
-    return bcrypt.compareSync(password, user.password)
-  }
 
 //node modules to be used://
 
@@ -160,14 +156,17 @@ app.get("/urls/:shortURL", (req, res) => {
   }
 });
 
+
+
 //posting URLs based on userID
 
-app.post("/urls/:id", (req, res) => { 
-  const shortURL = req.params.id;
+app.post("/urls/:shortURL/edit", (req, res) => { 
+  //console.log(req.body)
+  const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL]
-
+  //console.log(longURL)
   if (longURL && longURL.userID === req.session.user_ID) {
-    urlDatabase[shortURL.longURL] = req.body.longURL;
+    urlDatabase[shortURL].longURL = req.body.longURL;
     res.redirect("/urls");
   } else {
     res.redirect("/login")
